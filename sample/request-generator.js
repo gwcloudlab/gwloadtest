@@ -2,7 +2,7 @@
 // requires
 const loadtest = require('../lib/loadtest.js');
 const testserver = require('../lib/testserver.js');
-//const configuration = require('../sample/config.json');   
+
 
 const fs = require('fs');
 
@@ -10,8 +10,8 @@ const fs = require('fs');
 const options = {
     url: 'https://www.google.com/',
     statusCallback: statusCallback, 
-	requestsPerSecond: 5,
-	rpsInterval: 60
+	requestsPerSecond: 100,
+	rpsInterval: 11
 };
 
 
@@ -21,7 +21,10 @@ function statusCallback(error, result, latency) {
  	let f = result.requestElapsed.toString()+ '\n';
    // fs.writeFile('test.txt', f, { flag: 'a+' }, err => {});
     console.log('Request index: ', result.requestIndex);
+	console.log('Code: ', result.statusCode);
 }
+
+
 
 loadtest.loadTest(options, function(error) {
     if (error) {
