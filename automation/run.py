@@ -1,6 +1,6 @@
 import os, json
+import subprocess
 from tracemalloc import start
-#from plumbum import RETCODE, SshMachine, cli, local, BG, FG
 from Naked.toolshed.shell import execute_js
 
 
@@ -11,7 +11,11 @@ def generateLoad(req, duration):
 
 def start_function():
 	## use this to start the flask or sledge
-    exec(open("automation/function.py").read())
+    n = os.fork()
+    if n > 0:
+        print("hi")
+    else:
+     exec(open("automation/function.py").read())
     return
 
 def run_test(rps, duration):  
@@ -22,7 +26,7 @@ def run_test(rps, duration):
 def main():
     TEST_LIST = [1, 5, 10, 50, 100]
     duration = 10
-    #start_function()
+    start_function()
     for test in TEST_LIST:
 	     ld_out = run_test(test, duration)
 
