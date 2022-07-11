@@ -13,7 +13,7 @@ var errs= 0;
 var slowest;
 var fastest;
 var mx;
-var avg;
+var avg =0;
 
 
 let fileTitle = "sample/log-rps-"+rps+"-iv-"+rpsInter+ ".csv";
@@ -38,7 +38,7 @@ function statusCallback(error, result, latency) {
     fs.writeFile(fileTitle, s, { flag: 'a+' }, err => {});
 	console.log('Code: ', result.statusCode);
 
-    avg+=result.requestElapsed;
+    avg+=parseFloat(result.requestElapsed);
     if (result.requestIndex==0){
         slowest =result.requestElapsed;
         fastest = result.requestElapsed;
@@ -67,7 +67,7 @@ function statusCallback(error, result, latency) {
 }
 
 function percentile(){
-    let f = 'errors: ' + errs + '\n' + 'average: ' + avg/mx +' ms\n' + 'fastest: ' + fastest.toFixed(2) + ' ms\n'+ 'slowest: ' + slowest.toFixed(2) + ' ms\n' ;
+    let f = 'errors: ' + errs + '\n' + 'average: ' + (avg/mx).toFixed(2) +' ms\n' + 'fastest: ' + fastest.toFixed(2) + ' ms\n'+ 'slowest: ' + slowest.toFixed(2) + ' ms\n' ;
                 //fs.writeFile(fileTitle2, f, { flag: 'a' }, err => {});
                 
                 dta.sort(function(a, b){return a - b});

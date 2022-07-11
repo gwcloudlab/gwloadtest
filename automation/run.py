@@ -20,7 +20,7 @@ def run_test(rps, duration):
 
 
 def main():
-    TEST_LIST = [0, 5, 10, 50, 100]
+    TEST_LIST = [1, 5, 10, 50, 100]
     duration = 10
     #start_function()
     for test in TEST_LIST:
