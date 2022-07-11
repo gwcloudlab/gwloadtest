@@ -18,7 +18,7 @@ ylist = []
 
 fname = "const_svc_cost_c20"
 #Change path 
-df = pd.read_csv(r'sample/output.txt'.format(fname), nrows=100)
+df = pd.read_csv(r'sample/log-rps-10-iv-10.csv'.format(fname), nrows=100)
 
 #**********************************************************************
 #df.iterrows returns series for each row it does not preserve data types across the rows
@@ -35,11 +35,11 @@ for index, row in df.iterrows():
 #--------------------------
 #Histogram plot
 #--------------------------
-plt.figure(figsize=(14,7)) # Make it 14x7 inch
+plt.figure(figsize=(10,5)) # Make it 14x7 inch
 plt.style.use('seaborn-whitegrid') # nice and clean grid
-plt.title('Response time', fontsize = 45)
-plt.xlabel('X', fontsize = 25)
-plt.ylabel('Y', fontsize = 25)
-plt.hist(xlist, bins=20, facecolor = '#2ab0ff', edgecolor='#169acf', linewidth=0.5, alpha=0.7)
+plt.title('Response time', fontsize = 40)
+plt.xlabel('response time (ms)', fontsize = 20)
+plt.ylabel('number of occurences', fontsize = 20)
+plt.hist(xlist, facecolor = '#2ab0ff', edgecolor='#169acf', linewidth=0.5, alpha=0.7)
 plt.show()
 #--------------------------

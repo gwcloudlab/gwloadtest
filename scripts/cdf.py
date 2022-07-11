@@ -21,8 +21,7 @@ ylist = []
 fname = "const_svc_cost_c20"
 
 #Change path 
-df = pd.read_csv(r'sample/output.txt'.format(fname), nrows=100)
-print(df)
+df = pd.read_csv(r'sample/log-rps-10-iv-10.csv'.format(fname), nrows=100)
 
 #**********************************************************************
 #df.iterrows returns series for each row it does not preserve data types across the rows
@@ -42,6 +41,11 @@ for index, row in df.iterrows():
 #--------------------------
 sorted_data = np.sort(ylist)
 yvals=np.arange(len(sorted_data))/float(len(sorted_data)-1)
-plt.plot(sorted_data,yvals)
+plt.style.use('seaborn-whitegrid') # nice and clean grid
+plt.title('Response time cdf')
+plt.xlabel('response time (ms)')
+plt.ylabel('cdf')
+plt.ylim(0, 1)
+plt.plot(sorted_data, yvals)
 plt.show()
 #**********************************************************************
