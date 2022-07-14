@@ -4,7 +4,7 @@ import pandas as pd
 
 plt.figure()
 
-file_names = ['sample/log-rps-100-iv-10.csv','sample/log-rps-50-iv-10.csv','sample/log-rps-10-iv-10.csv']
+file_names = ['sample/log-rps-1000-iv-10.csv','sample/log-rps-100-iv-10.csv','sample/log-rps-10-iv-10.csv']
 subplotnum = (len(file_names)*100)+11 #should be 311 for 3 files, 211 for 2 files, etc
 
 
@@ -24,21 +24,21 @@ def create_subplot (data):
 
 def read_file(file):
     df = pd.read_csv(file)
-    print(df)
     data = []
     num = []
     for index, row in df.iterrows():
         num.append(index)
         #put header name of data you want in the hard brackets
         data.append(row[' latency'])
-    plt.subplot(subplotnum)
+    ax = plt.subplot(subplotnum)
     plt.plot(num, data)
 
+plt.suptitle("Latency over time(ms)", fontsize=16)
 
 for file in file_names:
     #create_subplot(file)
     read_file(file)
     subplotnum += 1
-
+plt.savefig('line_plot.png')
 plt.show()
 #plt.savefig('line_plot.pdf', format='pdf')
