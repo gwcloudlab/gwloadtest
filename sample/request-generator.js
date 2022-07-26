@@ -10,9 +10,9 @@ rps = args.rps;
 rpsInter= args.interval;
 const dta = [];
 var errs= 0;
-var slowest;
+var slowest; 
 var fastest;
-var mx;
+var max;
 var avg =0;
 
 
@@ -21,24 +21,26 @@ let fileTitle2 = "sample/sum-rps-"+rps+"-iv-"+rpsInter + ".txt";
 
 const options = {
     url: 'http://127.0.0.1:5000',
-    statusCallback: statusCallback, 
+    statusCallback: statusCallback,
 	requestsPerSecond: rps,
 	rpsInterval: rpsInter
 };
 
-
+//the function called after every request is finished 
 function statusCallback(error, result, latency) {
     console.log('----');
     console.log('Timestamp: ', result.startTime.toFixed(2));
     console.log('Request index: ', result.requestIndex);
     console.log('Request elapsed milliseconds: ', result.requestElapsed);
-    dta[result.requestIndex]= result.requestElapsed;
+    console.log('Code: ', result.statusCode);
+    
     let n = result.requestElapsed.toFixed();
  	let s = result.requestIndex + ", " +result.startTime.toFixed(2) + ", " + n.toString() + ", " + result.statusCode + "\n";
     fs.writeFile(fileTitle, s, { flag: 'a+' }, err => {});
-	console.log('Code: ', result.statusCode);
+	dta[result.requestIndex]= result.requestElapsed; // store elpased for percentile calculation
 
-    avg+=parseFloat(result.requestElapsed);
+    avg+=parseFloat(result.requestElapsed); // add to sum
+
     if (result.requestIndex==0){
         slowest =result.requestElapsed;
         fastest = result.requestElapsed;
@@ -60,32 +62,41 @@ function statusCallback(error, result, latency) {
     }
 
     if ( result.startTime>rpsInter*1000){
-        mx = result.requestIndex +1;
+        max = result.requestIndex +1;
+        // print summary after last request
+        let f = "Summary: " + '\n'; 
+		f = f + 'total time: ';
+		m = (result.startTime/1000).toFixed(2) + ' s\n';
+		f = f + m + 'total requests: ' + max + '\n';
+				
+		var num = result.startTime/1000;
+		f = f + 'throughput: ' + (max/num).toFixed(2) + ' req/s\n';
+		fs.writeFileSync(fileTitle2, f, { flag: 'w' }, err => {});
+       
         percentile();
         process.exit(0);
     }
 }
 
 function percentile(){
-    let f = 'errors: ' + errs + '\n' + 'average: ' + (avg/mx).toFixed(2) +' ms\n' + 'fastest: ' + fastest.toFixed(2) + ' ms\n'+ 'slowest: ' + slowest.toFixed(2) + ' ms\n' ;
-                //fs.writeFile(fileTitle2, f, { flag: 'a' }, err => {});
+    let f = 'errors: ' + errs + '\n' + 'average: ' + (avg/max).toFixed(2) +' ms\n' + 'fastest: ' + fastest.toFixed(2) + ' ms\n'+ 'slowest: ' + slowest.toFixed(2) + ' ms\n' ;
                 
                 dta.sort(function(a, b){return a - b});
                 
-                var p25 =( 0.25*(mx-1)).toFixed();
+                var p25 =( 0.25*(max-1)).toFixed();
                 f = f + '25%ile Latency: ' + dta[p25].toFixed(2) + ' ms\n';
                 
-                var p50 =( 0.50*(mx-1)).toFixed();
+                var p50 =( 0.50*(max-1)).toFixed();
                 f = f + '50%ile Latency: ' + dta[p50].toFixed(2) + ' ms\n';
             
-                var p75 =( 0.75*(mx-1)).toFixed();
+                var p75 =( 0.75*(max-1)).toFixed();
                 f = f + '75%ile Latency: ' + dta[p75].toFixed(2) + ' ms\n';
             
-                var p99 =( 0.99*(mx-1)).toFixed();
+                var p99 =( 0.99*(max-1)).toFixed();
                 f =  f +'99%ile Latency: ' + dta[p99] + ' ms\n';
                 
 
-                var p999 =( 0.999*(mx-1)).toFixed();
+                var p999 =( 0.999*(max-1)).toFixed();
                 f = f + '99.9%ile Latency: ' + dta[p999] + ' ms\n';
             
                 fs.writeFileSync(fileTitle2, f, { flag: 'a' }, err => {});
