@@ -23,7 +23,8 @@ const options = {
     url: 'http://127.0.0.1:5000',
     statusCallback: statusCallback,
 	requestsPerSecond: rps,
-	rpsInterval: rpsInter
+	rpsInterval: rpsInter,
+    url_list: 'sample/url_list.txt'
 };
 
 //the function called after every request is finished 
