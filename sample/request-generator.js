@@ -24,7 +24,9 @@ const options = {
     statusCallback: statusCallback,
 	requestsPerSecond: rps,
 	rpsInterval: rpsInter,
-    url_list: 'sample/url_list.txt'
+    //url_list: 'sample/url_list.txt', 
+    mode: 'closed' // for the model where it follows the link open or closed
+
 };
 
 //the function called after every request is finished 
@@ -34,10 +36,11 @@ function statusCallback(error, result, latency) {
     console.log('Request index: ', result.requestIndex);
     console.log('Request elapsed milliseconds: ', result.requestElapsed);
     console.log('Code: ', result.statusCode);
+    console.log('URL: ', result.url);
     
     let n = result.requestElapsed.toFixed();
- 	let s = result.requestIndex + ", " +result.startTime.toFixed(2) + ", " + n.toString() + ", " + result.statusCode + "\n";
-    fs.writeFile(fileTitle, s, { flag: 'a+' }, err => {});
+ 	let s = result.requestIndex + ", " +result.startTime.toFixed(2) + ", " + n.toString() + ", " + result.statusCode  + ", " + String(result.url) +"\n";
+    fs.writeFileSync(fileTitle, s, { flag: 'a+' }, err => {});
 	dta[result.requestIndex]= result.requestElapsed; // store elpased for percentile calculation
 
     avg+=parseFloat(result.requestElapsed); // add to sum
