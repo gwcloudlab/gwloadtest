@@ -5,8 +5,9 @@ const args = require('minimist')(process.argv.slice(2));
 
 
 const fs = require('fs');
-rps = args.rps;
-rpsInter= args.interval;
+//uncomment to use automation script
+//rps = args.rps; 
+//rpsInter= args.interval;
 const dta = [];
 var errs= 0;
 var slowest; 
@@ -14,19 +15,18 @@ var fastest;
 var max;
 var avg =0;
 
-
-let fileTitle = "sample/log-rps-"+rps+"-iv-"+rpsInter+ ".csv";
-let fileTitle2 = "sample/sum-rps-"+rps+"-iv-"+rpsInter + ".txt";
-
 const options = {
     url: 'http://127.0.0.1:5000',
     statusCallback: statusCallback,
-	requestsPerSecond: rps,
-	rpsInterval: rpsInter,
+	requestsPerSecond: 10, // replace number with rps for automation script
+	rpsInterval: 10, //replace number with rpsInter for automation script
     urlList: 'sample/url_list.txt',// an example of passing in a list of urls with weights by passing in the file title 
     clientMode: 'open' //passed in to activate gwloadtest modifications 'closed' for closed loop requests and 'open' for open loop requests 
 
 };
+
+let fileTitle = "sample/log-rps-"+options.requestsPerSecond+"-iv-"+options.rpsInterval+ ".csv";
+let fileTitle2 = "sample/sum-rps-"+options.requestsPerSecond+"-iv-"+options.rpsInterval + ".txt";
 
 //the function called after every request is finished 
 function statusCallback(error, result, latency) { 
@@ -65,7 +65,7 @@ function statusCallback(error, result, latency) {
       errs++;
     }
 
-    if ( result.startTime>rpsInter*1000){
+    if ( result.startTime>options.rpsInterval*1000){
         max = result.requestIndex +1;
 
         // print summary after last request

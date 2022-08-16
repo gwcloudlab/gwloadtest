@@ -12,28 +12,84 @@ Gwloadtest modified loadtest to creat load tests that imitate client-behavior mo
 ## How to Use
 
   1. Install Node.js, clone this repository, and open the newly cloned directory: 
+    ```sh 
      git clone https://github.com/gwcloudlab/gwloadtest.git
      sudo apt update
      sudo apt-get install -y nodejs
      cd ~/gwloadtest
      npm install
+     ```
   2. Modify sample/request-generator.js with desired options
   3. Run the following command to run the test:
+   ```sh 
      node sample/request-generator.js
+   ```
 
 ## Modfifications
 
 ### Poisson Interarrival time
 
+Given a requests per second rate and a time inerval for the load test, gwloadtests send requests at randomly distributed time intervals. 
+
 ### Logs and Summaries 
+
+Gwloadtest prints a summary text file along with a log file that includes the index, timestamp, latency, status code, and url of every request.
 
 ## Additions
 
 ### Client Modes 
 
+In an attempt to resmeble client behavior, gwloadtest carries two client behavior policies.
+
+#### Closed Loop 
+
+The client thread sends a request and waits for it to return an html, which it then parses for hyperlinks and randomly selects a link so send the next request to. If no links are found, it sends the next request to the options url.
+
+usage example:
+```javascript
+   const options = {
+        url: 'http://127.0.0.1:5000',
+        statusCallback: statusCallback,
+        requestsPerSecond: 10, 
+        rpsInterval: 10, 
+        clientMode: 'closed' 
+    };
+```
+
+#### Open Loop
+
+The client thread sends requests to multiple links according to the weights given in a file. A file must be passed in along with selecting the open clientMode.
+
+usage example:
+```javascript
+    const options = {
+        url: 'http://127.0.0.1:5000',
+        statusCallback: statusCallback,
+        requestsPerSecond: 10, 
+        rpsInterval: 10, 
+        urlList: 'sample/url_list.txt', //include title of file here 
+        clientMode: 'open' 
+    };
+```
+sample/url_list.txt:
+```
+  url, weight
+  http://127.0.0.1:5000, 0.80
+  http://127.0.0.1:5000/test1, 0.20
+```
+
 ### graphing scripts 
 
+Gwloadtest carries 4 types of graphing scripts in the scripts file, which can be run on the Gwloadtest generated log files.
+  1. 99th percentile latency vs. requests per second rate 
+  2. number of occurences vs latency histogram 
+  3. latency over time line graph
+  4. cdf vs response time 
+
+
 ### Automation Script 
+
+For research purposes, automation/run.py can run multiple tests given a list of requests per second rates.
 
 # loadtest
 
