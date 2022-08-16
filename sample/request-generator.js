@@ -1,4 +1,3 @@
-
 // requires
 const loadtest = require('../lib/loadtest.js');
 const testserver = require('../lib/testserver.js');
@@ -24,13 +23,13 @@ const options = {
     statusCallback: statusCallback,
 	requestsPerSecond: rps,
 	rpsInterval: rpsInter,
-    //url_list: 'sample/url_list.txt', 
-    mode: 'closed' // for the model where it follows the link open or closed
+    urlList: 'sample/url_list.txt',// an example of passing in a list of urls with weights by passing in the file title 
+    clientMode: 'open' //passed in to activate gwloadtest modifications 'closed' for closed loop requests and 'open' for open loop requests 
 
 };
 
 //the function called after every request is finished 
-function statusCallback(error, result, latency) {
+function statusCallback(error, result, latency) { 
     console.log('----');
     console.log('Timestamp: ', result.startTime.toFixed(2));
     console.log('Request index: ', result.requestIndex);
@@ -40,19 +39,21 @@ function statusCallback(error, result, latency) {
     
     let n = result.requestElapsed.toFixed();
  	let s = result.requestIndex + ", " +result.startTime.toFixed(2) + ", " + n.toString() + ", " + result.statusCode  + ", " + String(result.url) +"\n";
-    fs.writeFileSync(fileTitle, s, { flag: 'a+' }, err => {});
+
+    fs.writeFileSync(fileTitle, s, { flag: 'a+' }, err => {}); //write to the log file 
+
 	dta[result.requestIndex]= result.requestElapsed; // store elpased for percentile calculation
 
     avg+=parseFloat(result.requestElapsed); // add to sum
 
     if (result.requestIndex==0){
-        slowest =result.requestElapsed;
+        slowest = result.requestElapsed;
         fastest = result.requestElapsed;
 
     }
     else{
         if (result.requestElapsed<fastest){
-            fastest= result.requestElapsed;
+            fastest = result.requestElapsed;
 
         }
         else if(result.requestElapsed>slowest){
@@ -60,13 +61,13 @@ function statusCallback(error, result, latency) {
         }
     }
 
-
     if ( result.statusCode>299){
       errs++;
     }
 
     if ( result.startTime>rpsInter*1000){
         max = result.requestIndex +1;
+
         // print summary after last request
         let f = "Summary: " + '\n'; 
 		f = f + 'total time: ';
