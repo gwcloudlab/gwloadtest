@@ -1,5 +1,6 @@
 import pandas as pd
 import csv
+import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -17,7 +18,7 @@ ylist = []
 #**********************************************************************
 
 #Change path 
-df = pd.read_csv('sample/log-rps-100-iv-10.csv')
+df = pd.read_csv(sys.argv[0])
 
 #**********************************************************************
 #df.iterrows returns series for each row it does not preserve data types across the rows
