@@ -1,8 +1,9 @@
 import csv
+import sys
 import matplotlib.pyplot as plt
 import pandas as pd
 
-df = pd.read_csv("sample/rps-99ile.csv")
+df = pd.read_csv(sys.argv[0])
 print(df)
 data = []
 num = []
