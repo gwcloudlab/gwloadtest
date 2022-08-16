@@ -12,7 +12,7 @@ Gwloadtest modified loadtest to creat load tests that imitate client-behavior mo
 ## How to Use
 
   1. Install Node.js, clone this repository, and open the newly cloned directory: 
-    ```sh 
+    ```
      git clone https://github.com/gwcloudlab/gwloadtest.git
      sudo apt update
      sudo apt-get install -y nodejs
