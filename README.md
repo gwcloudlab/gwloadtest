@@ -5,6 +5,36 @@
 
 [![Package quality](http://packagequality.com/badge/loadtest.png)](http://packagequality.com/#?package=loadtest)
 
+# Gwloadtest
+
+Gwloadtest modified loadtest to creat load tests that imitate client-behavior more closely by using randomly distributed time intervals between requests and allowing for more random url access behavior. 
+
+## How to Use
+
+  1. Install Node.js, clone this repository, and open the newly cloned directory: 
+     git clone https://github.com/gwcloudlab/gwloadtest.git
+     sudo apt update
+     sudo apt-get install -y nodejs
+     cd ~/gwloadtest
+     npm install
+  2. Modify sample/request-generator.js with desired options
+  3. Run the following command to run the test:
+     node sample/request-generator.js
+
+## Modfifications
+
+### Poisson Interarrival time
+
+### Logs and Summaries 
+
+## Additions
+
+### Client Modes 
+
+### graphing scripts 
+
+### Automation Script 
+
 # loadtest
 
 Runs a load test on the selected HTTP or WebSockets URL. The API allows for easy integration in your own tests.
